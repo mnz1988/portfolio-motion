@@ -184,78 +184,40 @@ gltfLoader.load('/models/miniRobot.gltf', (gltf) =>
         }
     }
 )
-gltfLoader.load('/models/miniRobotFly.gltf', (gltf) =>
-    {
-        const miniFly1 = gltf.scene; miniFly1.scale.set(0.2, 0.2, 0.2); miniFly1.position.set(0, 0, 0); miniFly1.rotation.y = Math.PI / 2;  scene.add(miniFly1);
-        miniFly1.traverse((child) => { if (child.isMesh) { child.material.map = bakedTexture }});
-        const miniFly2 = miniFly1.clone(); miniFly2.position.set(0.231, -0.466, - 4.078); miniFly2.rotation.y = 1.271; scene.add(miniFly2);
-        const miniFly3 = miniFly1.clone(); miniFly3.position.set(-2.043, 1.111, 2.987); miniFly3.rotation.y = 3.042; scene.add(miniFly3);
-        const miniFly4 = miniFly1.clone(); miniFly4.position.set(-1.39, 1.979, -2.983); miniFly4.rotation.set(0.239, 1.361, 0.3); scene.add(miniFly4);
+gltfLoader.load('/models/miniRobotFly.gltf', (gltf) => {
+    const miniFly1 = gltf.scene; miniFly1.scale.set(0.2, 0.2, 0.2); miniFly1.position.set(0, 0, 0); miniFly1.rotation.y = Math.PI / 2; scene.add(miniFly1);
+    miniFly1.traverse((child) => { if (child.isMesh) { child.material.map = bakedTexture }});
+    const miniFly2 = miniFly1.clone(); miniFly2.position.set(0.231, -0.466, - 4.078); miniFly2.rotation.y = 1.271; scene.add(miniFly2);
+    const miniFly3 = miniFly1.clone(); miniFly3.position.set(-2.043, 1.111, 2.987); miniFly3.rotation.y = 3.042; scene.add(miniFly3);
+    const miniFly4 = miniFly1.clone(); miniFly4.position.set(-1.39, 1.979, -2.983); miniFly4.rotation.set(0.239, 1.361, 0.3); scene.add(miniFly4);
 
-        const FlyMotion1 = gltf.animations
-        if (FlyMotion1 && FlyMotion1.length > 0) {
-            const mixer = new THREE.AnimationMixer(miniFly1)
-            const action = mixer.clipAction(FlyMotion1[0])
-            action.setEffectiveTimeScale(1.3)
-            action.play()
-            const clock = new THREE.Clock()
-            const animate = () => {
-                const deltaTime = clock.getDelta()
-                mixer.update(deltaTime)
-                renderer.render(scene, camera)
-                requestAnimationFrame(animate)
-            }
-            animate()
-        }
+    const mixers = []; const clock = new THREE.Clock();
 
-        const FlyMotion2 = gltf.animations
-        if (FlyMotion2 && FlyMotion2.length > 0) {
-            const mixer = new THREE.AnimationMixer(miniFly2)
-            const action = mixer.clipAction(FlyMotion2[1])
-            action.play()
-            const clock = new THREE.Clock()
-            const animate = () => {
-                const deltaTime = clock.getDelta()
-                mixer.update(deltaTime)
-                renderer.render(scene, camera)
-                requestAnimationFrame(animate)
-            }
-            animate()
-        }
+    const addAnimation = (model, animation, timeScale = 1) => {
+    const mixer = new THREE.AnimationMixer(model)
+    const action = mixer.clipAction(animation)
+    action.setEffectiveTimeScale(timeScale)
+    action.play()
+    mixers.push(mixer)
+}
 
-        const FlyMotion3 = gltf.animations
-        if (FlyMotion3 && FlyMotion3.length > 0) {
-            const mixer = new THREE.AnimationMixer(miniFly3)
-            const action = mixer.clipAction(FlyMotion3[1])
-            action.setEffectiveTimeScale(0.7)
-            action.play()
-            const clock = new THREE.Clock()
-            const animate = () => {
-                const deltaTime = clock.getDelta()
-                mixer.update(deltaTime)
-                renderer.render(scene, camera)
-                requestAnimationFrame(animate)
-            }
-            animate()
-        }
+const animations = gltf.animations;
+if (animations && animations.length > 0) {
+    addAnimation(miniFly1, animations[0], 1.3)
+    addAnimation(miniFly2, animations[1])
+    addAnimation(miniFly3, animations[1], 0.7)
+    addAnimation(miniFly4, animations[1], -1)
+}
 
-        const FlyMotion4 = gltf.animations
-        if (FlyMotion4 && FlyMotion4.length > 0) {
-            const mixer = new THREE.AnimationMixer(miniFly4)
-            const action = mixer.clipAction(FlyMotion4[1])
-            action.timeScale = -1
-            action.play()
-            const clock = new THREE.Clock()
-            const animate = () => {
-                const deltaTime = clock.getDelta()
-                mixer.update(deltaTime)
-                renderer.render(scene, camera)
-                requestAnimationFrame(animate)
-            }
-            animate()
-        }
-    }
-)
+const animate = () => {
+    const deltaTime = clock.getDelta()
+    mixers.forEach((mixer) => mixer.update(deltaTime))
+    renderer.render(scene, camera)
+    requestAnimationFrame(animate)
+}
+
+animate()
+})
 gltfLoader.load('/models/fan.gltf', (gltf) =>
     {
         const fan = gltf.scene; fan.scale.set(0.2, 0.2, 0.2); fan.position.set(0, 0, 0); fan.rotation.y = Math.PI / 2;  scene.add(fan);
@@ -278,110 +240,43 @@ gltfLoader.load('/models/fan.gltf', (gltf) =>
         }
     }
 )
-gltfLoader.load('/models/particle.gltf', (gltf) =>
-    {
-        const particle = gltf.scene; particle.position.set(-2.141, 1.379, 2.338); particle.rotation.y = modelsRotation; particle.scale.set(0.3, 0.3, 0.3);
-        const particle2 = particle.clone(); particle2.rotation.y = -0.5; particle2.position.set(-2.054, 1.358, -4.741); 
-        scene.add(particle, pLight2); //******** */
+gltfLoader.load('/models/particle.gltf', (gltf) =>  {
+    const particle = gltf.scene; 
+    particle.position.set(-0.7, -0.175, 1.2); particle.rotation.y = modelsRotation; particle.scale.set(0.3, 0.3, 0.3);
+    const particle2 = particle.clone(); particle2.rotation.y = -0.5; particle2.position.set(-0.5, -0.1, -5.9); 
+    const particle3 = particle2.clone(); particle3.position.set(0.381, 0.054, - 3.09); particle3.scale.set(0.2, 0.2, 0.2); 
+    const particle4 = particle.clone(); const particle5 = particle2.clone(); particle4.position.set(-0.486, 0.218, 4.869); particle5.position.set(-0.374, 0.198, -2.18)
+    const particle6 = particle.clone(); const particle7 = particle2.clone(); particle6.position.set(-2.141, 1.379, 2.338); particle7.position.set(-2.054, 1.358, -4.741);
+    const particle8 = particle3.clone(); particle8.position.set(-1.219, 1.156, 0.81); 
 
-        const particleMotion = gltf.animations
-        if (particleMotion && particleMotion.length > 0) {
-            const mixer = new THREE.AnimationMixer(particle)
-            const action = mixer.clipAction(particleMotion[0])
-            action.setEffectiveTimeScale(1)
-            action.play()
-            const clock = new THREE.Clock()
-            const animate = () => {
-                const deltaTime = clock.getDelta()
-                mixer.update(deltaTime)
-                renderer.render(scene, camera)
-                requestAnimationFrame(animate)
-            }
-            animate()
-        }//*******/
-        const particleMotion2 = gltf.animations
-        if (particleMotion2 && particleMotion2.length > 0) {
-            const mixer = new THREE.AnimationMixer(particle2)
-            const action = mixer.clipAction(particleMotion2[0])
-            action.setEffectiveTimeScale(1.5)
-            action.play()
-            const clock = new THREE.Clock()
-            const animate = () => {
-                const deltaTime = clock.getDelta()
-                mixer.update(deltaTime)
-                renderer.render(scene, camera)
-                requestAnimationFrame(animate)
-            }
-            animate()
-        }
-        ///////////////////////////////
-        // const particle4 = particle.clone(); const particle5 = particle2.clone(); particle4.position.set(-0.486, 0.218, 4.869); particle5.position.set(-0.374, 0.198, -2.18)
-        // scene.add(particle4, particle5); //******* */
-        // const particleMotion4 = gltf.animations
-        // if (particleMotion4 && particleMotion4.length > 0) {
-        //     const mixer = new THREE.AnimationMixer(particle4)
-        //     const action = mixer.clipAction(particleMotion4[0])
-        //     action.setEffectiveTimeScale(1)
-        //     action.play()
-        //     const clock = new THREE.Clock()
-        //     const animate = () => {
-        //         const deltaTime = clock.getDelta()
-        //         mixer.update(deltaTime)
-        //         renderer.render(scene, camera)
-        //         requestAnimationFrame(animate)
-        //     }
-        //     animate()
-        // }//*******/
-        // const particleMotion5 = gltf.animations
-        // if (particleMotion5 && particleMotion5.length > 0) {
-        //     const mixer = new THREE.AnimationMixer(particle5)
-        //     const action = mixer.clipAction(particleMotion5[0])
-        //     action.setEffectiveTimeScale(1.5)
-        //     action.play()
-        //     const clock = new THREE.Clock()
-        //     const animate = () => {
-        //         const deltaTime = clock.getDelta()
-        //         mixer.update(deltaTime)
-        //         renderer.render(scene, camera)
-        //         requestAnimationFrame(animate)
-        //     }
-        //     animate()
-        // }
-        /////////////////
-        // const particle6 = particle.clone(); const particle7 = particle2.clone(); particle6.position.set(-2.141, 1.379, 2.338); particle7.position.set(-2.054, 1.358, -4.741);
-        // scene.add(particle6, particle7); //******* */
-        // const particleMotion6 = gltf.animations
-        // if (particleMotion6 && particleMotion6.length > 0) {
-        //     const mixer = new THREE.AnimationMixer(particle6)
-        //     const action = mixer.clipAction(particleMotion6[0])
-        //     action.setEffectiveTimeScale(1)
-        //     action.play()
-        //     const clock = new THREE.Clock()
-        //     const animate = () => {
-        //         const deltaTime = clock.getDelta()
-        //         mixer.update(deltaTime)
-        //         renderer.render(scene, camera)
-        //         requestAnimationFrame(animate)
-        //     }
-        //     animate()
-        // }//*******/
-        // const particleMotion7 = gltf.animations
-        // if (particleMotion7 && particleMotion7.length > 0) {
-        //     const mixer = new THREE.AnimationMixer(particle7)
-        //     const action = mixer.clipAction(particleMotion7[0])
-        //     action.setEffectiveTimeScale(1.5)
-        //     action.play()
-        //     const clock = new THREE.Clock()
-        //     const animate = () => {
-        //         const deltaTime = clock.getDelta()
-        //         mixer.update(deltaTime)
-        //         renderer.render(scene, camera)
-        //         requestAnimationFrame(animate)
-        //     }
-        //     animate()
-        // }
+    scene.add(particle, pLight2, particle3, particle4, particle5, particle6, particle7, particle8);
+    // scene.add(particle6, particle7);
+
+    const mixers = []; const clock = new THREE.Clock();
+
+    const addAnimation = (model, animation, timeScale = 1) => { 
+        const mixer = new THREE.AnimationMixer(model); const action = mixer.clipAction(animation); 
+        action.setEffectiveTimeScale(timeScale); action.play(); mixers.push(mixer);
     }
-)
+
+    const animations = gltf.animations;
+    if (animations && animations.length > 0) {
+        addAnimation(particle, animations[0], 1);
+        addAnimation(particle2, animations[0], 1.5);
+        addAnimation(particle3, animations[0], 0.8);
+        addAnimation(particle4, animations[0], 1);
+        addAnimation(particle5, animations[0], 1.5);
+        addAnimation(particle6, animations[0], 1);
+        addAnimation(particle7, animations[0], 1.5);
+        addAnimation(particle8, animations[0], 0.8);
+    }
+    const animate = () => {
+        const deltaTime = clock.getDelta();
+        mixers.forEach(mixer => mixer.update(deltaTime));
+        renderer.render(scene, camera);
+        requestAnimationFrame(animate);
+    }; animate();
+})
 // Boxes on shelves
 const shape1 = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.15, 0.15), new THREE.MeshBasicMaterial());
 shape1.position.set(-3.11, 0.57, 3.3); const shape2 = shape1.clone(); const shape3 = shape1.clone(); const shape4 = shape1.clone();
