@@ -2,37 +2,48 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { gsap } from 'gsap'
+// import GUI from 'lil-gui'
 
 /** * Loaders */
 let sceneReady = false
 const loadingBarElement = document.querySelector('.loading-bar')
 const footerElement = document.querySelector('footer')
+// const fileNameElement = document.getElementById('file-name')
+// const progressBarElement = document.getElementById('progress-bar')
 const loadingManager = new THREE.LoadingManager(
     // Loaded
     () => {
         window.setTimeout(() => {
+            // Animate overlay
             gsap.to(overlayMaterial.uniforms.uAlpha, { duration: 3, value: 0, delay: 1 })
+            // Update loadingBarElement
             loadingBarElement.classList.add('ended')
             loadingBarElement.style.transform = ''
+            // show footer
             footerElement.classList.remove('hidden')
         }, 500)
-        window.setTimeout(() => {
-            sceneReady = true
-        }, 1000)
+        window.setTimeout(() => { sceneReady = true }, 1000)
     },
+
     // Progress
-    (itemUrl, itemsLoaded, itemsTotal) => {
+    (itemUrl, itemsLoaded, itemsTotal) =>
+    {
+        console.log(`Loading item: ${itemUrl}`);
+        console.log(`Items loaded: ${itemsLoaded} of ${itemsTotal}`)
+        // Calculate the progress and update the loadingBarElement
         const progressRatio = itemsLoaded / itemsTotal
         loadingBarElement.style.transform = `scaleX(${progressRatio})`
     }
 )
 
 const gltfLoader = new GLTFLoader(loadingManager) 
+
 const textureLoader = new THREE.TextureLoader(loadingManager)
 const bakedTexture = textureLoader.load('models/backed_texture.webp')
 bakedTexture.flipY = false
 bakedTexture.colorSpace = THREE.SRGBColorSpace
 
+/** * Base */
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
 
@@ -43,21 +54,30 @@ scene.background = new THREE.Color( 0x222222 )
 /** * Overlay */
 const overlayGeometry = new THREE.PlaneGeometry(2, 2, 1, 1)
 const overlayMaterial = new THREE.ShaderMaterial({
+    // wireframe: true,
     transparent: true,
-    uniforms:{ uAlpha: { value: 1 } },
+    uniforms:
+    {
+        uAlpha: { value: 1 }
+    },
     vertexShader: `
-        void main() {
+        void main()
+        {
             gl_Position = vec4(position, 1.0);
         }
     `,
     fragmentShader: `
         uniform float uAlpha;
-        void main() {
+
+        void main()
+        {
             gl_FragColor = vec4(0.0, 0.0, 0.0, uAlpha);
         }
     `
 })
-const overlay = new THREE.Mesh(overlayGeometry, overlayMaterial); scene.add(overlay);
+const overlay = new THREE.Mesh(overlayGeometry, overlayMaterial)
+scene.add(overlay)
+
 
 /** * Models */
 const modelsRotation = Math.PI * 0.5
@@ -92,11 +112,11 @@ const models = [
 
 models.forEach(model => loadModel(model.url, model.scale, model.rotation, model.position))
 
-gltfLoader.load('/models/window.gltf', (gltf) =>
-    {
+
+gltfLoader.load('/models/window.gltf', (gltf) => {
         const windowModel = gltf.scene
         windowModel.scale.set(0.2, 0.2, 0.2); 
-        windowModel.traverse((child) => { if (child.isMesh) { child.material.map = bakedTexture; child.frustumCulled = true; }})
+        windowModel.traverse((child) => { if (child.isMesh) { child.material.map = bakedTexture, child.frustumCulled = true }})
 
         const windowInstances = [
         { position: new THREE.Vector3(0, 0, 0), rotation: new THREE.Euler(0, modelsRotation, 0) },
@@ -130,8 +150,7 @@ gltfLoader.load('/models/window.gltf', (gltf) =>
     }
 
 )
-gltfLoader.load('/models/projector.gltf', (gltf) =>
-    {
+gltfLoader.load('/models/projector.gltf', (gltf) => {
         const nRow = 8; const nColumn = 3; const xSpace = 2; const zSpace = 0.9;
         for (let row = 0; row < nRow; row++) {
             for (let col = 0; col < nColumn; col++) {
@@ -139,18 +158,20 @@ gltfLoader.load('/models/projector.gltf', (gltf) =>
                 projectors.scale.set(0.2, 0.2, 0.2); projectors.rotation.y = modelsRotation;
                 projectors.position.set([col * xSpace], 0, -[row * zSpace])
                 scene.add(projectors)
-                projectors.traverse((child) => { if (child.isMesh) { child.material.map = bakedTexture; child.frustumCulled = true; }})
+                projectors.traverse((child) => { if (child.isMesh) { child.material.map = bakedTexture, child.frustumCulled = true }})
             }
         }
     }
 )
 // with animation inside gltf
-gltfLoader.load('/models/miniRobot.gltf', (gltf) =>
-    {
+gltfLoader.load('/models/miniRobot.gltf', (gltf) => {
         const mini1 = gltf.scene; mini1.scale.set(0.2, 0.2, 0.2); mini1.position.set(0, 0, 0); mini1.rotation.y = Math.PI / 2;  scene.add(mini1);
-        mini1.traverse((child) => { if (child.isMesh) { child.material.map = bakedTexture; child.frustumCulled = true; }});
+        mini1.traverse((child) => { if (child.isMesh) { child.material.map = bakedTexture, child.frustumCulled = true }});
+
         const mini2 = mini1.clone(); mini2.position.set(-2.89, -1.485, 1.389); mini2.rotation.y = 2.771; scene.add(mini2);
+
         const mini3 = mini1.clone(); mini3.position.set(0.85, -1.248, 2.273); mini3.rotation.y = - 1.931; scene.add(mini3);
+
         const mini4 = mini1.clone(); mini4.position.set(0.458, -1.146, 6.596); mini4.rotation.set(0.346, - 1.931, 0.456); scene.add(mini4);
 
         const mini2Motion = gltf.animations
@@ -170,43 +191,42 @@ gltfLoader.load('/models/miniRobot.gltf', (gltf) =>
     }
 )
 gltfLoader.load('/models/miniRobotFly.gltf', (gltf) => {
-    const miniFly1 = gltf.scene; miniFly1.scale.set(0.2, 0.2, 0.2); miniFly1.position.set(0, 0, 0); miniFly1.rotation.y = Math.PI / 2; scene.add(miniFly1);
-    miniFly1.traverse((child) => { if (child.isMesh) { child.material.map = bakedTexture; child.frustumCulled = true; }});
-    const miniFly2 = miniFly1.clone(); miniFly2.position.set(0.231, -0.466, - 4.078); miniFly2.rotation.y = 1.271; scene.add(miniFly2);
-    const miniFly3 = miniFly1.clone(); miniFly3.position.set(-2.043, 1.111, 2.987); miniFly3.rotation.y = 3.042; scene.add(miniFly3);
-    const miniFly4 = miniFly1.clone(); miniFly4.position.set(-1.39, 1.979, -2.983); miniFly4.rotation.set(0.239, 1.361, 0.3); scene.add(miniFly4);
+        const miniFly1 = gltf.scene; miniFly1.scale.set(0.2, 0.2, 0.2); miniFly1.position.set(0, 0, 0); miniFly1.rotation.y = Math.PI / 2; scene.add(miniFly1);
+        miniFly1.traverse((child) => { if (child.isMesh) { child.material.map = bakedTexture, child.frustumCulled = true }});
+        const miniFly2 = miniFly1.clone(); miniFly2.position.set(0.231, -0.466, - 4.078); miniFly2.rotation.y = 1.271; scene.add(miniFly2);
+        const miniFly3 = miniFly1.clone(); miniFly3.position.set(-2.043, 1.111, 2.987); miniFly3.rotation.y = 3.042; scene.add(miniFly3);
+        const miniFly4 = miniFly1.clone(); miniFly4.position.set(-1.39, 1.979, -2.983); miniFly4.rotation.set(0.239, 1.361, 0.3); scene.add(miniFly4);
 
-    const mixers = []; const clock = new THREE.Clock();
+        const mixers = []; const clock = new THREE.Clock();
 
-    const addAnimation = (model, animation, timeScale = 1) => {
-    const mixer = new THREE.AnimationMixer(model)
-    const action = mixer.clipAction(animation)
-    action.setEffectiveTimeScale(timeScale)
-    action.play()
-    mixers.push(mixer)
-}
+        const addAnimation = (model, animation, timeScale = 1) => {
+        const mixer = new THREE.AnimationMixer(model)
+        const action = mixer.clipAction(animation)
+        action.setEffectiveTimeScale(timeScale)
+        action.play()
+        mixers.push(mixer)
+    }
 
-const animations = gltf.animations;
-if (animations && animations.length > 0) {
-    addAnimation(miniFly1, animations[0], 1.3)
-    addAnimation(miniFly2, animations[1])
-    addAnimation(miniFly3, animations[1], 0.7)
-    addAnimation(miniFly4, animations[1], -1)
-}
+    const animations = gltf.animations;
+    if (animations && animations.length > 0) {
+        addAnimation(miniFly1, animations[0], 1.3)
+        addAnimation(miniFly2, animations[1])
+        addAnimation(miniFly3, animations[1], 0.7)
+        addAnimation(miniFly4, animations[1], -1)
+    }
 
-const animate = () => {
-    const deltaTime = clock.getDelta()
-    mixers.forEach((mixer) => mixer.update(deltaTime))
-    renderer.render(scene, camera)
-    requestAnimationFrame(animate)
-}
+    const animate = () => {
+        const deltaTime = clock.getDelta()
+        mixers.forEach((mixer) => mixer.update(deltaTime))
+        renderer.render(scene, camera)
+        requestAnimationFrame(animate)
+    }
 
-animate()
+    animate()
 })
-gltfLoader.load('/models/fan.gltf', (gltf) =>
-    {
+gltfLoader.load('/models/fan.gltf', (gltf) => {
         const fan = gltf.scene; fan.scale.set(0.2, 0.2, 0.2); fan.position.set(0, 0, 0); fan.rotation.y = Math.PI / 2;  scene.add(fan);
-        fan.traverse((child) => { if (child.isMesh) { child.material.map = bakedTexture; child.frustumCulled = true; }});
+        fan.traverse((child) => { if (child.isMesh) { child.material.map = bakedTexture, child.frustumCulled = true }});
 
         const fanMotion = gltf.animations
         if (fanMotion && fanMotion.length > 0) {
@@ -333,11 +353,15 @@ controls.addEventListener('change', () => {
 })
 
 /** Renderer */
-const renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true})
+const renderer = new THREE.WebGLRenderer({
+    canvas: canvas,
+    antialias: true
+})
 renderer.useLegacyLights = false
 renderer.toneMapping = THREE.ReinhardToneMapping
 renderer.toneMappingExposure = 3
 renderer.shadowMap.enabled = false
+// renderer.shadowMap.type = THREE.PCFSoftShadowMap
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 renderer.setClearColor(0x202020)
@@ -392,3 +416,11 @@ const tick = () =>
 }
 
 tick()
+
+    // const guiSet = new GUI().title('pos')
+    // guiSet.add(newObject.position, 'x', -10, 10, 0.001)
+    // guiSet.add(newObject.position, 'y', -10, 10, 0.001)
+    // guiSet.add(newObject.position, 'z', -10, 10, 0.001)
+    // guiSet.add(newObject.rotation, 'x', - Math.PI, Math.PI, 0.001)
+    // guiSet.add(newObject.rotation, 'y', - Math.PI, Math.PI, 0.001)
+    // guiSet.add(newObject.rotation, 'z', - Math.PI, Math.PI, 0.001)
