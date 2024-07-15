@@ -280,8 +280,8 @@ gltfLoader.load('/models/fan.gltf', (gltf) =>
 )
 gltfLoader.load('/models/particle.gltf', (gltf) =>
     {
-        const particle = gltf.scene; particle.position.set(-0.7, -0.175, 1.2); particle.rotation.y = modelsRotation; particle.scale.set(0.3, 0.3, 0.3);
-        const particle2 = particle.clone(); particle2.rotation.y = -0.5; particle2.position.set(-0.5, -0.1, -5.9); 
+        const particle = gltf.scene; particle.position.set(-2.141, 1.379, 2.338); particle.rotation.y = modelsRotation; particle.scale.set(0.3, 0.3, 0.3);
+        const particle2 = particle.clone(); particle2.rotation.y = -0.5; particle2.position.set(-2.054, 1.358, -4.741); 
         scene.add(particle, pLight2); //******** */
 
         const particleMotion = gltf.animations
@@ -315,71 +315,71 @@ gltfLoader.load('/models/particle.gltf', (gltf) =>
             animate()
         }
         ///////////////////////////////
-        const particle4 = particle.clone(); const particle5 = particle2.clone(); particle4.position.set(-0.486, 0.218, 4.869); particle5.position.set(-0.374, 0.198, -2.18)
-        scene.add(particle4, particle5); //******* */
-        const particleMotion4 = gltf.animations
-        if (particleMotion4 && particleMotion4.length > 0) {
-            const mixer = new THREE.AnimationMixer(particle4)
-            const action = mixer.clipAction(particleMotion4[0])
-            action.setEffectiveTimeScale(1)
-            action.play()
-            const clock = new THREE.Clock()
-            const animate = () => {
-                const deltaTime = clock.getDelta()
-                mixer.update(deltaTime)
-                renderer.render(scene, camera)
-                requestAnimationFrame(animate)
-            }
-            animate()
-        }//*******/
-        const particleMotion5 = gltf.animations
-        if (particleMotion5 && particleMotion5.length > 0) {
-            const mixer = new THREE.AnimationMixer(particle5)
-            const action = mixer.clipAction(particleMotion5[0])
-            action.setEffectiveTimeScale(1.5)
-            action.play()
-            const clock = new THREE.Clock()
-            const animate = () => {
-                const deltaTime = clock.getDelta()
-                mixer.update(deltaTime)
-                renderer.render(scene, camera)
-                requestAnimationFrame(animate)
-            }
-            animate()
-        }
+        // const particle4 = particle.clone(); const particle5 = particle2.clone(); particle4.position.set(-0.486, 0.218, 4.869); particle5.position.set(-0.374, 0.198, -2.18)
+        // scene.add(particle4, particle5); //******* */
+        // const particleMotion4 = gltf.animations
+        // if (particleMotion4 && particleMotion4.length > 0) {
+        //     const mixer = new THREE.AnimationMixer(particle4)
+        //     const action = mixer.clipAction(particleMotion4[0])
+        //     action.setEffectiveTimeScale(1)
+        //     action.play()
+        //     const clock = new THREE.Clock()
+        //     const animate = () => {
+        //         const deltaTime = clock.getDelta()
+        //         mixer.update(deltaTime)
+        //         renderer.render(scene, camera)
+        //         requestAnimationFrame(animate)
+        //     }
+        //     animate()
+        // }//*******/
+        // const particleMotion5 = gltf.animations
+        // if (particleMotion5 && particleMotion5.length > 0) {
+        //     const mixer = new THREE.AnimationMixer(particle5)
+        //     const action = mixer.clipAction(particleMotion5[0])
+        //     action.setEffectiveTimeScale(1.5)
+        //     action.play()
+        //     const clock = new THREE.Clock()
+        //     const animate = () => {
+        //         const deltaTime = clock.getDelta()
+        //         mixer.update(deltaTime)
+        //         renderer.render(scene, camera)
+        //         requestAnimationFrame(animate)
+        //     }
+        //     animate()
+        // }
         /////////////////
-        const particle6 = particle.clone(); const particle7 = particle2.clone(); particle6.position.set(-2.141, 1.379, 2.338); particle7.position.set(-2.054, 1.358, -4.741);
-        scene.add(particle6, particle7); //******* */
-        const particleMotion6 = gltf.animations
-        if (particleMotion6 && particleMotion6.length > 0) {
-            const mixer = new THREE.AnimationMixer(particle6)
-            const action = mixer.clipAction(particleMotion6[0])
-            action.setEffectiveTimeScale(1)
-            action.play()
-            const clock = new THREE.Clock()
-            const animate = () => {
-                const deltaTime = clock.getDelta()
-                mixer.update(deltaTime)
-                renderer.render(scene, camera)
-                requestAnimationFrame(animate)
-            }
-            animate()
-        }//*******/
-        const particleMotion7 = gltf.animations
-        if (particleMotion7 && particleMotion7.length > 0) {
-            const mixer = new THREE.AnimationMixer(particle7)
-            const action = mixer.clipAction(particleMotion7[0])
-            action.setEffectiveTimeScale(1.5)
-            action.play()
-            const clock = new THREE.Clock()
-            const animate = () => {
-                const deltaTime = clock.getDelta()
-                mixer.update(deltaTime)
-                renderer.render(scene, camera)
-                requestAnimationFrame(animate)
-            }
-            animate()
-        }
+        // const particle6 = particle.clone(); const particle7 = particle2.clone(); particle6.position.set(-2.141, 1.379, 2.338); particle7.position.set(-2.054, 1.358, -4.741);
+        // scene.add(particle6, particle7); //******* */
+        // const particleMotion6 = gltf.animations
+        // if (particleMotion6 && particleMotion6.length > 0) {
+        //     const mixer = new THREE.AnimationMixer(particle6)
+        //     const action = mixer.clipAction(particleMotion6[0])
+        //     action.setEffectiveTimeScale(1)
+        //     action.play()
+        //     const clock = new THREE.Clock()
+        //     const animate = () => {
+        //         const deltaTime = clock.getDelta()
+        //         mixer.update(deltaTime)
+        //         renderer.render(scene, camera)
+        //         requestAnimationFrame(animate)
+        //     }
+        //     animate()
+        // }//*******/
+        // const particleMotion7 = gltf.animations
+        // if (particleMotion7 && particleMotion7.length > 0) {
+        //     const mixer = new THREE.AnimationMixer(particle7)
+        //     const action = mixer.clipAction(particleMotion7[0])
+        //     action.setEffectiveTimeScale(1.5)
+        //     action.play()
+        //     const clock = new THREE.Clock()
+        //     const animate = () => {
+        //         const deltaTime = clock.getDelta()
+        //         mixer.update(deltaTime)
+        //         renderer.render(scene, camera)
+        //         requestAnimationFrame(animate)
+        //     }
+        //     animate()
+        // }
     }
 )
 // Boxes on shelves
