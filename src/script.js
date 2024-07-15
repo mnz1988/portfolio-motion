@@ -64,31 +64,39 @@ const modelsRotation = Math.PI * 0.5
 
 const loadModel = (url, scale, rotation, position = null) => {
     gltfLoader.load(url, (gltf) => {
-        const model = gltf.scene
-        model.scale.set(scale, scale, scale)
-        model.rotation.y = rotation
-        if (position) model.position.set(...position)
+        const model = gltf.scene;  model.scale.set(scale, scale, scale); model.rotation.y = rotation;
+        if (position) model.position.set(...position);
         model.traverse((child) => {
-            if (child.isMesh) {
-                child.material.map = bakedTexture
-                child.frustumCulled = true
-            }
-        })
-        scene.add(model)
-    })
+            if (child.isMesh) { child.material.map = bakedTexture; child.frustumCulled = true; }
+        }); scene.add(model); });
 }
-loadModel('/models/base-static.gltf', 0.2, modelsRotation)
-loadModel('/models/bigRobot.gltf', 0.2, modelsRotation)
-loadModel('/models/door.gltf', 0.2, modelsRotation)
-loadModel('/models/door.gltf', 0.2, 0, [0.88, 1.967, -5.95]) // Cloned door with new position
-loadModel('/models/ac.gltf', 0.2, modelsRotation)
-loadModel('/models/ac.gltf', 0.2, 0, [0.88, 0, - 4.97]) // cloned AC
+
+const models = [
+    { url: '/models/base-static.gltf', scale: 0.2, rotation: modelsRotation },
+    { url: '/models/bigRobot.gltf', scale: 0.2, rotation: modelsRotation },
+    { url: '/models/door.gltf', scale: 0.2, rotation: modelsRotation },
+    { url: '/models/door.gltf', scale: 0.2, rotation: 0, position: [0.88, 1.967, -5.95] },
+    { url: '/models/ac.gltf', scale: 0.2, rotation: modelsRotation },
+    { url: '/models/ac.gltf', scale: 0.2, rotation: 0, position: [0.88, 0, -4.97] },
+    { url: '/models/shelves.gltf', scale: 0.2, rotation: modelsRotation },
+    { url: '/models/shelves.gltf', scale: 0.2, rotation: modelsRotation, position: [0, 0, -1.34] },
+    { url: '/models/shelves.gltf', scale: 0.2, rotation: modelsRotation, position: [0, 0, -2.61] },
+    { url: '/models/shelves.gltf', scale: 0.2, rotation: modelsRotation, position: [0, 0, -3.78] },
+    { url: '/models/shelves.gltf', scale: 0.2, rotation: modelsRotation, position: [0, 0, -4.977] },
+    { url: '/models/shelves.gltf', scale: 0.2, rotation: modelsRotation, position: [0, 0, -6.14] },
+    { url: '/models/workstation.gltf', scale: 0.2, rotation: modelsRotation },
+    { url: '/models/workstation.gltf', scale: 0.2, rotation: modelsRotation, position: [0, 0, -1.7] },
+    { url: '/models/workstation.gltf', scale: 0.2, rotation: modelsRotation, position: [0, 0, -3.475] },
+    { url: '/models/workstation.gltf', scale: 0.2, rotation: modelsRotation, position: [0, 0, -5.42] }
+]
+
+models.forEach(model => loadModel(model.url, model.scale, model.rotation, model.position))
 
 gltfLoader.load('/models/window.gltf', (gltf) =>
     {
         const windowModel = gltf.scene
         windowModel.scale.set(0.2, 0.2, 0.2); 
-        windowModel.traverse((child) => { if (child.isMesh) { child.material.map = bakedTexture }})
+        windowModel.traverse((child) => { if (child.isMesh) { child.material.map = bakedTexture; child.frustumCulled = true; }})
 
         const windowInstances = [
         { position: new THREE.Vector3(0, 0, 0), rotation: new THREE.Euler(0, modelsRotation, 0) },
@@ -122,7 +130,6 @@ gltfLoader.load('/models/window.gltf', (gltf) =>
     }
 
 )
-
 gltfLoader.load('/models/projector.gltf', (gltf) =>
     {
         const nRow = 8; const nColumn = 3; const xSpace = 2; const zSpace = 0.9;
@@ -132,38 +139,16 @@ gltfLoader.load('/models/projector.gltf', (gltf) =>
                 projectors.scale.set(0.2, 0.2, 0.2); projectors.rotation.y = modelsRotation;
                 projectors.position.set([col * xSpace], 0, -[row * zSpace])
                 scene.add(projectors)
-                projectors.traverse((child) => { if (child.isMesh) { child.material.map = bakedTexture }})
+                projectors.traverse((child) => { if (child.isMesh) { child.material.map = bakedTexture; child.frustumCulled = true; }})
             }
         }
-    }
-)
-gltfLoader.load('/models/shelves.gltf', (gltf) =>
-    {
-        const shelves = gltf.scene; shelves.scale.set(0.2, 0.2, 0.2); shelves.rotation.y = modelsRotation; scene.add(shelves);
-        shelves.traverse((child) => { if (child.isMesh) { child.material.map = bakedTexture }});
-        const shelv2 = shelves.clone(); shelv2.position.z = -1.34; scene.add(shelv2);
-        const shelv3 = shelves.clone(); shelv3.position.z = -2.61; scene.add(shelv3);
-        const shelv4 = shelves.clone(); shelv4.position.z = -3.78; scene.add(shelv4);
-        const shelv5 = shelves.clone(); shelv5.position.z = -4.977; scene.add(shelv5);
-        const shelv6 = shelves.clone(); shelv6.position.z = -6.14; scene.add(shelv6);
-
-    }
-)
-gltfLoader.load('/models/workstation.gltf', (gltf) =>
-    {
-        const workstation1 = gltf.scene
-        workstation1.scale.set(0.2, 0.2, 0.2); workstation1.rotation.y = modelsRotation; scene.add(workstation1);
-        workstation1.traverse((child) => { if (child.isMesh) { child.material.map = bakedTexture }})
-        const workstation2 = workstation1.clone(); workstation2.position.z = -1.7; scene.add(workstation2);
-        const workstation3 = workstation1.clone(); workstation3.position.z = -3.475; scene.add(workstation3);
-        const workstation4 = workstation1.clone(); workstation4.position.z = -5.42; scene.add(workstation4);
     }
 )
 // with animation inside gltf
 gltfLoader.load('/models/miniRobot.gltf', (gltf) =>
     {
         const mini1 = gltf.scene; mini1.scale.set(0.2, 0.2, 0.2); mini1.position.set(0, 0, 0); mini1.rotation.y = Math.PI / 2;  scene.add(mini1);
-        mini1.traverse((child) => { if (child.isMesh) { child.material.map = bakedTexture }});
+        mini1.traverse((child) => { if (child.isMesh) { child.material.map = bakedTexture; child.frustumCulled = true; }});
         const mini2 = mini1.clone(); mini2.position.set(-2.89, -1.485, 1.389); mini2.rotation.y = 2.771; scene.add(mini2);
         const mini3 = mini1.clone(); mini3.position.set(0.85, -1.248, 2.273); mini3.rotation.y = - 1.931; scene.add(mini3);
         const mini4 = mini1.clone(); mini4.position.set(0.458, -1.146, 6.596); mini4.rotation.set(0.346, - 1.931, 0.456); scene.add(mini4);
@@ -186,7 +171,7 @@ gltfLoader.load('/models/miniRobot.gltf', (gltf) =>
 )
 gltfLoader.load('/models/miniRobotFly.gltf', (gltf) => {
     const miniFly1 = gltf.scene; miniFly1.scale.set(0.2, 0.2, 0.2); miniFly1.position.set(0, 0, 0); miniFly1.rotation.y = Math.PI / 2; scene.add(miniFly1);
-    miniFly1.traverse((child) => { if (child.isMesh) { child.material.map = bakedTexture }});
+    miniFly1.traverse((child) => { if (child.isMesh) { child.material.map = bakedTexture; child.frustumCulled = true; }});
     const miniFly2 = miniFly1.clone(); miniFly2.position.set(0.231, -0.466, - 4.078); miniFly2.rotation.y = 1.271; scene.add(miniFly2);
     const miniFly3 = miniFly1.clone(); miniFly3.position.set(-2.043, 1.111, 2.987); miniFly3.rotation.y = 3.042; scene.add(miniFly3);
     const miniFly4 = miniFly1.clone(); miniFly4.position.set(-1.39, 1.979, -2.983); miniFly4.rotation.set(0.239, 1.361, 0.3); scene.add(miniFly4);
@@ -221,7 +206,7 @@ animate()
 gltfLoader.load('/models/fan.gltf', (gltf) =>
     {
         const fan = gltf.scene; fan.scale.set(0.2, 0.2, 0.2); fan.position.set(0, 0, 0); fan.rotation.y = Math.PI / 2;  scene.add(fan);
-        fan.traverse((child) => { if (child.isMesh) { child.material.map = bakedTexture }});
+        fan.traverse((child) => { if (child.isMesh) { child.material.map = bakedTexture; child.frustumCulled = true; }});
 
         const fanMotion = gltf.animations
         if (fanMotion && fanMotion.length > 0) {
