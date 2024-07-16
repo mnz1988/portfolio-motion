@@ -5,20 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moji Norouzi Portfolio</title>
     
-    <!-- <link href="./style3js.css" rel="stylesheet"> -->
 
-  <script type="module" crossorigin src="./assets/index-c5a4ffcf.js"></script>
-  <link rel="stylesheet" href="./assets/index-f0d3d46f.css">
+  <script type="module" crossorigin src="./assets/index-b6cd1ba6.js"></script>
+  <link rel="stylesheet" href="./assets/index-41eb6a8b.css">
 </head>
 <body>
+
+    <div id="popup" class="fixed h-screen mx-auto items-center justify-center bg-white z-10">
+        <div class="mx-auto bg-white px-16 py-5 z-10"><div class="flex z-10 bg-white">
+            <div class="p-6 mx-auto z-10 bg-white"><div class="flex mx-auto p-4 z-10 bg-white">
+                <img src="./screen-rotate.svg" class="animate-bounce mx-auto pt-8" width="70" height="70">
+            </div></div></div>
+            <h3 class="my-4 text-center text-2xl font-semibold text-gray-500">Mobile or Tablet!!</h3>
+            <p class="text-center font-normal text-gray-500">To have a good experience on the 3D scene, it's better to rotate your screen to landscape mode.</p>
+            <img src="./swipe.svg" class="mx-auto py-2.5" width="100">
+            <p class="text-center font-normal text-gray-500 mx-auto items-center justify-center pb-4">Also, swipe with one finger to rotate the 3D scene (left, right, up, down) or use two fingers to shift it.</p>
+            <div class="mx-auto items-center justify-center">
+            <button onclick="closePopup()" class="w-full animate-bounce mx-3 my-4 rounded-lg border px-6 py-3 text-center font-medium" type="button">Thank you for the tip</button></div>
+        </div>
+    </div>
+
+    <script>
+        function isMobileDevice() { return /Mobi|Android/i.test(navigator.userAgent); }
+        function showPopup() { document.getElementById('popup').style.display = 'block'; }
+        function closePopup() { document.getElementById('popup').style.display = 'none'; }
+        function checkOrientation() {
+            if (isMobileDevice() && (window.orientation === 0 || window.orientation === 180)) {
+                showPopup();
+            } else {
+                closePopup();
+            }
+        }
+
+        window.addEventListener('orientationchange', checkOrientation);
+        window.addEventListener('load', checkOrientation);
+    </script>
     
+    <div class="loading-bar"></div>
     <canvas class="webgl"></canvas>
 
-    <div class="loading-bar"></div>
-    <!-- <div id="file-name"></div>
-    <div id="progress-bar"></div> -->
+    <footer class="hidden">
+        <div>
+            <p class="txt1">Hi!</p>
+            <p class="txt2">WELCOME TO MY</p>
+            <p class="txt3 text-transparent bg-clip-text bg-gradient-to-br from-blue-300 to-pink-600 dark:from-blue-400 dark:to-pink-400">ART-TECH STUDIO</p>
+        </div>
+        <div class="txt4">@ 2024</div>
+    </footer>
     
-
     <div class="point point-0">
         <a class="label" href="./portfolio.html">Portfolio</a>
         <!-- <span>&#10534;</span> -->
@@ -28,17 +62,8 @@
         <a class="label" href="./about.html">About</a>
         <div class="text">Know me more and get in touch</div>
     </div>
+
     
-    <footer class="hidden">
-        <div>
-        <p class="txt1">Hi!</p>
-        <p class="txt2">WELCOME TO MY</p>
-        <p class="txt3 text-transparent bg-clip-text bg-gradient-to-br from-blue-300 to-pink-600 dark:from-blue-400 dark:to-pink-400">ART-TECH STUDIO</p>
-        </div>
-
-        <div class="txt4">@ 2024</div>
-
-    </footer>
 
     
 
