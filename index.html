@@ -11,17 +11,19 @@
 </head>
 <body>
 
-    <div id="popup" class="fixed h-screen mx-auto items-center justify-center bg-white z-10">
-        <div class="mx-auto bg-white px-16 py-5 z-10"><div class="flex z-10 bg-white">
-            <div class="p-6 mx-auto z-10 bg-white"><div class="flex mx-auto p-4 z-10 bg-white">
-                <img src="./screen-rotate.svg" class="animate-bounce mx-auto pt-8" width="70" height="70">
-            </div></div></div>
-            <h3 class="my-4 text-center text-2xl font-semibold text-gray-500">Mobile or Tablet!!</h3>
-            <p class="text-center font-normal text-gray-500">To have a good experience on the 3D scene, it's better to rotate your screen to landscape mode.</p>
-            <img src="./swipe.svg" class="mx-auto py-2.5" width="100">
-            <p class="text-center font-normal text-gray-500 mx-auto items-center justify-center pb-4">Also, swipe with one finger to rotate the 3D scene (left, right, up, down) or use two fingers to shift it.</p>
-            <div class="mx-auto items-center justify-center">
-            <button onclick="closePopup()" class="w-full animate-bounce mx-3 my-4 rounded-lg border px-6 py-3 text-center font-medium" type="button">Thank you for the tip</button></div>
+    <div id="popup" class="popupcontainer">
+        <div class="popupcard">
+            <div class="popupicon-wrapper">
+                <div class="popupicon-bg">
+                <div class="popupicon"><img src="./screen-rotate.svg" class="animate-bounce" width="70"></div>
+                </div>
+            </div>
+            <h3 class="popuptitle">Mobile <small>or</small> Tablet?!</h3>
+            <p class="popupdescription">To have a good experience on the 3D scene, it's better to rotate your screen to landscape mode.</p>
+            <br>
+            <div class="popupicon"><img src="./swipe.svg" class="animate-bounce" width="110"></div>
+            <p class="popupdescription">Also, swipe with one finger to rotate the 3D scene (left, right, up, down) or use two fingers to shift it.</p>
+            <button class="popupbutton" onclick="closePopup()">Thank you for the tip</button>
         </div>
     </div>
 
@@ -42,9 +44,9 @@
     </script>
     
     <div class="loading-bar"></div>
-    <canvas class="webgl"></canvas>
+    <canvas class="webgl -z-50"></canvas>
 
-    <footer class="hidden">
+    <footer class="hidden z-0">
         <div>
             <p class="txt1">Hi!</p>
             <p class="txt2">WELCOME TO MY</p>
@@ -62,8 +64,6 @@
         <a class="label" href="./about.html">About</a>
         <div class="text">Know me more and get in touch</div>
     </div>
-
-    
 
     
 
